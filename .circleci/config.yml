@@ -242,7 +242,7 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints:
-            - "3a:cc:70:58:02:e2:ae:5d:ae:dc:72:9f:77:73:f5:ec"
+            - "47:43:1a:c4:53:55:ba:8f:6c:fc:b7:22:da:db:c7:96"
       - attach_workspace:
           at: ~/
       - install_ansible
@@ -325,7 +325,7 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints:
-            - "3a:cc:70:58:02:e2:ae:5d:ae:dc:72:9f:77:73:f5:ec"
+            - "47:43:1a:c4:53:55:ba:8f:6c:fc:b7:22:da:db:c7:96"
       - attach_workspace:
           at: ~/
       - run:
@@ -385,6 +385,8 @@ jobs:
              echo ${BACKEND_IP}
              echo backend-${CIRCLE_WORKFLOW_ID:0:7}
              echo "${API_URL}"  
+             echo "sleeping ..."
+             sleep 60
              if curl "$API_URL/api/status" | grep "ok"
              then
               exit 0

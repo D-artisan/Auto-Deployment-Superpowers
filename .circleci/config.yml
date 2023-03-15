@@ -262,7 +262,11 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
-      - install_awscli
+      - run:
+          name: Install AWS CLI
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y awscli
       # - install_nodejs
       - restore_cache:
           keys: [backend-build]

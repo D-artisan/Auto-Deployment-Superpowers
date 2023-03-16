@@ -63,7 +63,6 @@
   apt:
     autoremove: yes
 
-
 - name: Print message
   debug:
       msg: "{{ execute_node.stdout_lines }}"

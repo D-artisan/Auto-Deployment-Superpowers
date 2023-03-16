@@ -22,7 +22,6 @@
     state: latest
     update_cache: yes
    
-  # pm = process manager 
 - name: "install pm2"
   become: true
   npm:

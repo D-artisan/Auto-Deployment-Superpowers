@@ -43,14 +43,12 @@ commands:
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
     parameters:
-      # Add parameter here 
       workflowID:
         type: string 
         default: ${CIRCLE_WORKFLOW_ID:0:7}
     steps:
       - run:
           name: Revert migrations
-          # Add when this will run
           when: on_fail
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
@@ -102,7 +100,6 @@ jobs:
 
   test-frontend:
     docker:
-      # Docker image here
       - image: circleci/node:13.8.0
     steps:
       - checkout
@@ -117,7 +114,6 @@ jobs:
                 
   test-backend:
     docker:
-      # Docker image here
       - image: circleci/node:13.8.0
     steps:
       - checkout
@@ -132,7 +128,6 @@ jobs:
             
   scan-frontend:
     docker:
-      # Docker image here
       - image: circleci/node:13.8.0
     steps:
       - checkout
@@ -149,7 +144,6 @@ jobs:
 
   scan-backend:
     docker:
-      # Docker image here
       - image: circleci/node:13.8.0
     steps:
       - checkout
@@ -165,10 +159,8 @@ jobs:
 
   deploy-infrastructure:
     docker:
-      # Docker image here that supports AWS CLI
       - image: amazon/aws-cli
     steps:
-      # Checkout code from git
       - checkout
       - run: yum install tar gzip -y
       - run:
@@ -203,21 +195,17 @@ jobs:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
-      # Here's where you will add some code to rollback on failure 
       - destroy-environment:
           workflowID: ${CIRCLE_WORKFLOW_ID:0:7}     
 
   configure-infrastructure:
     docker:
-      # Docker image here that supports Ansible
       - image: python:3.10-alpine3.16
     steps:
-      # Checkout code from git
       - checkout
       - add_ssh_keys:
           fingerprints:
             - "47:43:1a:c4:53:55:ba:8f:6c:fc:b7:22:da:db:c7:96"
-      # attach workspace
       - attach_workspace:
           at: ~/
       - run:
@@ -231,25 +219,18 @@ jobs:
             cd .circleci/ansible
             ls -al
             ansible-playbook -i inventory.txt configure-server.yml
-          no_output_timeout: 30m
-      # Here's where you will add some code to rollback on failure 
+          no_output_timeout: 30m 
       - destroy-environment:
           workflowID: ${CIRCLE_WORKFLOW_ID:0:7}
 
   run-migrations:
     docker:
-      # Docker image here that supports NodeJS
       - image: circleci/node:13.8.0
     steps:
-      # Checkout code from git
       - checkout
       - install_awscli
-      # - install_nodejs
       - restore_cache:
           keys: [backend-build]
-      # - run: 
-      #   command: | 
-      #     apk add --update aws-cli
       - run:
           name: Run migrations
           command: |
@@ -265,7 +246,6 @@ jobs:
             then
               curl --insecure https://kvdb.io/HKk9z7vpKtZh4RniLkcTE9/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
             fi
-    # Here's where you will add some code to rollback on failure  
       - destroy-environment:
           workflowID: ${CIRCLE_WORKFLOW_ID:0:7}
       - revert-migrations:
@@ -273,10 +253,8 @@ jobs:
 
   deploy-frontend:
     docker:
-      # Docker image here that supports AWS CLI
       - image: python:3.10-alpine3.16
     steps:
-      # Checkout code from git
       - checkout
       - attach_workspace:
           at: ~/
@@ -309,7 +287,6 @@ jobs:
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
-      # Here's where you will add some code to rollback on failure 
       - destroy-environment:
           workflowID: ${CIRCLE_WORKFLOW_ID:0:7}
       - revert-migrations:
@@ -317,15 +294,12 @@ jobs:
                     
   deploy-backend:
     docker:
-      # Docker image here that supports Ansible
       - image: python:3.10-alpine3.16
     steps:
-      # Checkout code from git
       - checkout
       - add_ssh_keys:
           fingerprints:
             - "47:43:1a:c4:53:55:ba:8f:6c:fc:b7:22:da:db:c7:96"
-      # attach workspace here
       - attach_workspace:
           at: ~/
       - run:
@@ -374,10 +348,8 @@ jobs:
 
   smoke-test:
     docker:
-      # Lightweight Docker image that works 
       - image: python:3.10-alpine3.16
     steps:
-      # Checkout code from git
       - checkout
       - run:
           name: Install dependencies
@@ -414,7 +386,6 @@ jobs:
             else
                 return 1
             fi
-      # Here's where you will add some code to rollback on failure  
       - destroy-environment:
           workflowID: ${CIRCLE_WORKFLOW_ID:0:7}
       - revert-migrations:
@@ -422,10 +393,8 @@ jobs:
 
   cloudfront-update:
     docker:
-      # Docker image here that supports AWS CLI,
       - image: amazon/aws-cli
     steps:
-      # Checkout code from git
       - checkout
       - run:
           name: Install dependencies
@@ -456,15 +425,11 @@ jobs:
               
             echo OldWorkflowID: cat ~/project/OldWorkflowID.txt
             echo CurrentWorflowID: "${CIRCLE_WORKFLOW_ID:0:7}"
-      # Here's where you will add some code to rollback on failure 
-   
 
   cleanup:
     docker:
-      # Docker image here
       - image: amazon/aws-cli
     steps:
-      # Checkout code from git
       - checkout
       - run:
           name: Install dependencies

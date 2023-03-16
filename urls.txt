@@ -6,4 +6,4 @@ Public URL for your CloudFront distribution (aka, your blue production front-end
 
 Public URL to deployed application back-end in EC2 [URL04][http://54.221.255.41:3030/api/status]
 
-Public URL to your Prometheus Server [URL05][http://ec2-54-173-90-251.compute-1.amazonaws.com:9090/targets]
+Public URL to your Prometheus Server [URL05][http://ec2-52-3-242-139.compute-1.amazonaws.com:9090/targets]
